@@ -28,3 +28,8 @@ CREATE TABLE `useraccount` (
 -- Dumping data for table `useraccount`
 --
 
+LOCK TABLES `useraccount` WRITE;
+/*!40000 ALTER TABLE `useraccount` DISABLE KEYS */;
+INSERT INTO `useraccount` VALUES (1,'ian.jo@gmail.com','password','ian.jo23@gmail.com','Ian','Jo','12345','M','+63 9087654321',468432000000,'0','0',1512763400407,1512763400407);
+/*!40000 ALTER TABLE `useraccount` ENABLE KEYS */;
+UNLOCK TABLES;
