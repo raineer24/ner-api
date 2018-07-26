@@ -3,13 +3,17 @@ const app = express();
 const config = require('./config/config');
 const log = require('color-logs')(true, true, __filename);
 const Conn = require('./service/connection');
-
+const bodyParser = require('body-parser');
 this.dbConn = Conn;
 
 app.listen(config.env.port, '0.0.0.0', () => {
     log.info(`Server started on ${config.env.port}`);
 });
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 // Retrieve all todos 
 app.get('/useraccount', function (req, res) {
