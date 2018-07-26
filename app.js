@@ -46,3 +46,12 @@ app.put('/useraccount', function (req, res) {
         res.end(JSON.stringify(results));
     });
 });
+
+//rest api to delete record from mysql database
+app.delete('/useraccount', function (req, res) {
+    console.log(req.body);
+    Conn.query('DELETE FROM `useraccount` WHERE `id`=?', [req.body.id], function (error, results, fields) {
+        if (error) throw error;
+        res.end('Record has been deleted!');
+    });
+});
