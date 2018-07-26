@@ -19,6 +19,14 @@ app.use(bodyParser.urlencoded({
 app.get('/useraccount', function (req, res) {
     Conn.query('SELECT * FROM useraccount', function (error, results, fields) {
         if (error) throw error;
-        return res.send({ error: false, data: results, message: 'Todos list.' });
+        return res.send({ error: false, data: results, message: 'Users list.' });
+    });
+});
+
+//rest api to get a single employee data
+app.get('/useraccount/:id', function (req, res) {
+    Conn.query('select * from useraccount where id=?', [req.params.id], function (error, results, fields) {
+        if (error) throw error;
+        res.end(JSON.stringify(results));
     });
 });
