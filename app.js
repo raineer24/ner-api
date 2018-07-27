@@ -5,7 +5,9 @@ const log = require('color-logs')(true, true, __filename);
 const Conn = require('./service/connection');
 const bodyParser = require('body-parser');
 const sql = require('sql');
+const apiSubPath = express();
 
+const cors = require('cors');
 
 const SwaggerParser = require('swagger-parser');
 const SwaggerExpress = require('swagger-express-mw');
@@ -20,9 +22,38 @@ SwaggerParser.validate(config.swaggerFile)
         log.info('Swagger Error:', err);
     });
 
-app.listen(config.env.port, '0.0.0.0', () => {
-    log.info(`Server started on ${config.env.port}`);
-});
+    SwaggerParser.bundle(config.swaggerFile)
+    .then((api) => {
+        const swaggerConfig = {
+            appRoot: __dirname,
+            swagger: api
+            
+        };
+        // Initialise swagger express middleware
+        SwaggerExpress.create(swaggerConfig, (err, swaggerExpress) => { 
+            if (err) { throw err; }
+
+            app.use(cors({
+                origin: '*',
+                exposedHeaders: ['Content-Range', 'X-Content-Range', 'Content-Disposition', 'Content-Error'],
+                credentials: true,
+            }));
+
+            apiSubPath.get('/v1/swagger.json', (req, res) => {
+                res.json(api);
+            });
+
+            swaggerExpress.register(apiSubPath);
+
+            app.use(apiSubPath);
+
+            app.listen(config.env.port, '0.0.0.0', () => {
+                log.info(`Server started on ${config.env.port}`);
+            });
+        });  
+    }); //end of swagger parser.bundle
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
