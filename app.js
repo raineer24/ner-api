@@ -5,7 +5,7 @@ const log = require('color-logs')(true, true, __filename);
 const Conn = require('./service/connection');
 const bodyParser = require('body-parser');
 const sql = require('sql');
-this.dbConn = Conn;
+
 
 app.listen(config.env.port, '0.0.0.0', () => {
     log.info(`Server started on ${config.env.port}`);
@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({
 
 sql.setDialect('mysql');
 this.table = 'useraccount';
+this.dbConn = Conn;
 this.sqltable = sql.define({
     name: this.table,
     columns: [
@@ -47,7 +48,8 @@ const query = this.sqltable.select(this.sqltable.star()).from(this.sqltable).toQ
 
 // Retrieve all todos 
 app.get('/useraccount', function (req, res) {
-    Conn.queryAsync(query.text, query.values, function (error, results, fields) {
+    this.dbConn = Conn;
+    this.dbConn.queryAsync(query.text, query.values, function (error, results, fields) {
         if (error) throw error;
         return res.send({ error: false, data: results, message: 'Users list.' });
     });
