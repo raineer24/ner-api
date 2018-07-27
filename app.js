@@ -7,6 +7,19 @@ const bodyParser = require('body-parser');
 const sql = require('sql');
 
 
+const SwaggerParser = require('swagger-parser');
+const SwaggerExpress = require('swagger-express-mw');
+const SwaggerUi = require('swagger-tools/middleware/swagger-ui');
+
+// Validate swagger definition
+SwaggerParser.validate(config.swaggerFile)
+    .then((result) => {
+        log.info('Validation OK', result.info);
+    })
+    .catch((err) => {
+        log.info('Swagger Error:', err);
+    });
+
 app.listen(config.env.port, '0.0.0.0', () => {
     log.info(`Server started on ${config.env.port}`);
 });
@@ -54,4 +67,10 @@ app.get('/useraccount', function (req, res) {
         return res.send({ error: false, data: results, message: 'Users list.' });
     });
 });
-
+//rest api to get a single employee data
+app.get('/useraccount/:id', function (req, res) {
+    Conn.query('select * from useraccount where id=?', [req.params.id], function (error, results, fields) {
+        if (error) throw error;
+        res.end(JSON.stringify(results));
+    });
+});
