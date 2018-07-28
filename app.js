@@ -40,7 +40,7 @@ SwaggerParser.validate(config.swaggerFile)
                 exposedHeaders: ['Content-Range', 'X-Content-Range', 'Content-Disposition', 'Content-Error'],
                 credentials: true,
             }));
-            const cookieParser = require('cookie-parser');
+            
             app.use(bodyParser.json());
             app.use(bodyParser.urlencoded({
                 extended: true
@@ -62,53 +62,5 @@ SwaggerParser.validate(config.swaggerFile)
 
 
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
-sql.setDialect('mysql');
-this.table = 'useraccount';
-this.dbConn = Conn;
-this.sqltable = sql.define({
-    name: this.table,
-    columns: [
-        'id',
-        'username',
-        'password',
-        'email',
-        'firstName',
-        'lastName',
-        'uiid',
-        'gender',
-        'mobileNumber',
-        'birthdate',
-        'deactivated',
-        'forcedReset',
-        'dateCreated',
-        'dateUpdated',
-    ]
-
-    
-});
 
 
-const query = this.sqltable.select(this.sqltable.star()).from(this.sqltable).toQuery();
-    
-
-
-// Retrieve all todos 
-app.get('/useraccount', function (req, res) {
-    this.dbConn = Conn;
-    this.dbConn.queryAsync(query.text, query.values, function (error, results, fields) {
-        if (error) throw error;
-        return res.send({ error: false, data: results, message: 'Users list.' });
-    });
-});
-//rest api to get a single employee data
-app.get('/useraccount/:id', function (req, res) {
-    Conn.query('select * from useraccount where id=?', [req.params.id], function (error, results, fields) {
-        if (error) throw error;
-        res.end(JSON.stringify(results));
-    });
-});
