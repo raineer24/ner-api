@@ -6,7 +6,9 @@ const Conn = require('./service/connection');
 const bodyParser = require('body-parser');
 const sql = require('sql');
 const apiSubPath = express();
-
+const morgan = require('morgan');
+// const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 
 const SwaggerParser = require('swagger-parser');
@@ -38,7 +40,12 @@ SwaggerParser.validate(config.swaggerFile)
                 exposedHeaders: ['Content-Range', 'X-Content-Range', 'Content-Disposition', 'Content-Error'],
                 credentials: true,
             }));
-
+            const cookieParser = require('cookie-parser');
+            app.use(bodyParser.json());
+            app.use(bodyParser.urlencoded({
+                extended: true
+            }));
+            app.use(SwaggerUi(swaggerExpress.runner.swagger));
             apiSubPath.get('/v1/swagger.json', (req, res) => {
                 res.json(api);
             });
