@@ -67,16 +67,18 @@ Useraccount.prototype.findAll = (skip, limit, filters) => {
             .offset(skip)
             .toQuery();
     } else {
-        query = that.sqlTable
-            .select(that.sqlTable.star())
-            .from(that.sqlTable)
-            .limit(limit)
-            .offset(skip)
-            .toQuery();
+        query = that.sqltable.select(that.sqltable.star()).from(that.sqltable).toQuery();
     }
     log.info(query.text);
 
     return that.dbConn.queryAsync(query.text, query.values);
 };
 
+/**
+  * Release connection
+  * @param {any} value
+  * @param {string} field
+  * @return {object<Promise>}
+*/
+Useraccount.prototype.release = () => that.dbConn.releaseConnectionAsync();
 module.exports = Useraccount;

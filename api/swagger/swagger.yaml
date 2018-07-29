@@ -48,7 +48,7 @@ paths:
         #         type: string
         #         example: Not Found
   /user/account/{id}/view:
-    x-swagger-router-controller: users
+    x-swagger-router-controller: useraccount
     get:
       tags:
         - profile
@@ -336,11 +336,11 @@ paths:
                 type: string
                 example: Unauthorized
   /user:
-    x-swagger-router-controller: users
+    x-swagger-router-controller: useraccount
     get:
       tags:
         - user
-      summary: Get all users
+      summary: Get all usersaccount
       operationId: getAllUsers
       parameters:
         - $ref: "#/parameters/skip"

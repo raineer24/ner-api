@@ -15,6 +15,9 @@ const SwaggerParser = require('swagger-parser');
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUi = require('swagger-tools/middleware/swagger-ui');
 
+const { authenticate } = require('./middleware/authenticate').authenticate;
+const { authorize } = require('./middleware/authorize').authorize;
+
 // Validate swagger definition
 SwaggerParser.validate(config.swaggerFile)
     .then((result) => {
@@ -28,7 +31,11 @@ SwaggerParser.validate(config.swaggerFile)
     .then((api) => {
         const swaggerConfig = {
             appRoot: __dirname,
-            swagger: api
+            swagger: api,
+            swaggerSecurityHandlers: {
+                userSecurity: authenticate,
+                roles: authorize,
+            },
             
         };
         // Initialise swagger express middleware
@@ -45,6 +52,11 @@ SwaggerParser.validate(config.swaggerFile)
             app.use(bodyParser.urlencoded({
                 extended: true
             }));
+
+            apiSubPath.use((req, res, next) => {
+                res.setHeader('X-Powered-By', 'EOS');
+                next();
+            });
             app.use(SwaggerUi(swaggerExpress.runner.swagger));
             apiSubPath.get('/v1/swagger.json', (req, res) => {
                 res.json(api);
