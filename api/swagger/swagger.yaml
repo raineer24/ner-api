@@ -1,0 +1,107 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Grocer X App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths
+basePath: /v1
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+# x-globalParameters: &GLOB_HEADER
+#   - $ref: '#/parameters/authHeader'
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+  /:
+    x-swagger-router-controller: useraccount
+    get:
+      tags:
+        - profile
+      summary: Return user profile
+      operationId: connectDb
+      responses:
+        200:
+          description: Profile Object
+          schema:
+            properties:
+              id:
+                type: number
+                example: 5000012
+        # 404:
+        #   description: ofile not found
+        #   schema:
+        #     properties:
+        #       message:
+        #         type: string
+        #         example: Not Found
+  /useraccount:
+    x-swagger-router-controller: useraccount
+    get:
+      tags:
+        - user
+      summary: Get all usersaccount
+      operationId: getAllUsers
+      # parameters:
+      #   - $ref: "#/parameters/skip"
+      #   - $ref: "#/parameters/limit"
+      responses:
+        200:
+          description: Get all users
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 10012
+        403:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+  /useraccount/account/save:
+    x-swagger-router-controller: useraccount
+    post:
+      tags:
+        - user
+      summary: Register useraccount
+      operationId: registerAccount
+      parameters:
+        - name: body
+          in: body
+          description: post contents
+          required: true
+          schema:
+            $ref: "#/definitions/UserRegister"
+      responses:
+        200:
+          description: Successful registration
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: norbert@hutcake.com
+        403:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized              
