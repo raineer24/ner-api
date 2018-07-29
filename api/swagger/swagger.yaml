@@ -74,3 +74,34 @@ paths:
               message:
                 type: string
                 example: Unauthorized
+  /useraccount/account/save:
+    x-swagger-router-controller: useraccount
+    post:
+      tags:
+        - user
+      summary: Register useraccount
+      operationId: registerAccount
+      parameters:
+        - name: body
+          in: body
+          description: post contents
+          required: true
+          schema:
+            $ref: "#/definitions/UserRegister"
+      responses:
+        200:
+          description: Successful registration
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: norbert@hutcake.com
+        403:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized              
