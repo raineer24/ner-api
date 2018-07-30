@@ -45,12 +45,23 @@ Useraccount.prototype.testConnection = () => new BluePromise((resolve, reject) =
     reject('Not Found');
 });
 
+/**
+  * Save User account
+  * @param {string} username
+  * @param {string} password
+  * @param {string} email
+  * @param {string} uiid
+  * @return {object}
+*/
 Useraccount.prototype.create = () => new BluePromise((resolve, reject) => {
     that.getByValue(that.model.username, 'username')
       .then((results) => {
-          log.info(results);
-          const query = that.sqlTable.insert(that.model).toQuery();
-          return that.dbConn.queryAsync(query.text, query.values);
+          if(results.length === 0) {
+              log.info(results);
+          }
+          const query = that.sqltable.insert(that.model).toQuery();
+          that.dbConn.queryAsync(query.text, query.values);
+          log.info(query.values);
       })
         .catch((err) => {
             reject(err);

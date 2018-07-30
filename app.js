@@ -10,6 +10,7 @@ const morgan = require('morgan');
 // const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const SwaggerParser = require('swagger-parser');
 const SwaggerExpress = require('swagger-express-mw');
@@ -48,10 +49,13 @@ SwaggerParser.validate(config.swaggerFile)
                 credentials: true,
             }));
             
-            app.use(bodyParser.json());
-            app.use(bodyParser.urlencoded({
-                extended: true
-            }));
+            app.use(cookieParser());
+            app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+            app.use(bodyParser({ limit: '100mb', extended: true }));
+            app.use(bodyParser.json({ type: 'application/*+json', limit: '100mb', extended: true }));
+            app.use(SwaggerUi(swaggerExpress.runner.swagger));
+            app.use(express.static(path.join(__dirname, 'public')));
+            app.use(morgan('combined'));
 
             apiSubPath.use((req, res, next) => {
                 res.setHeader('X-Powered-By', 'EOS');
