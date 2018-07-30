@@ -1,6 +1,7 @@
 const BluePromise = require('bluebird');
 const sql = require('sql');
 const config = require('../../config/config');
+const _ = require('lodash');
 
 const Conn = require('../../service/connection');
 const log = require('color-logs')(true, true, 'User Account');
@@ -44,7 +45,17 @@ Useraccount.prototype.testConnection = () => new BluePromise((resolve, reject) =
     reject('Not Found');
 });
 
-
+Useraccount.prototype.create = () => new BluePromise((resolve, reject) => {
+    that.getByValue(that.model.username, 'username')
+      .then((results) => {
+          log.info(results);
+          const query = that.sqlTable.insert(that.model).toQuery();
+          return that.dbConn.queryAsync(query.text, query.values);
+      })
+        .catch((err) => {
+            reject(err);
+        });
+})
 
 Useraccount.prototype.findAll = (skip, limit, filters) => {
     let query = null;
@@ -71,6 +82,34 @@ Useraccount.prototype.findAll = (skip, limit, filters) => {
     }
     log.info(query.text);
 
+    return that.dbConn.queryAsync(query.text, query.values);
+};
+
+/**
+  * Format response object and/or append additional object properties
+  * @param {object} object
+  * @param {object} properties
+  * @return {object}
+*/
+Useraccount.prototype.cleanResponse = (object, properties) => {
+    // eslint-disable-next-line
+    delete object.password;
+    _.merge(object, properties);
+
+    return object;
+};
+
+/**
+  * Get by value
+  * @param {any} value
+  * @param {string} field
+  * @return {object<Promise>}
+*/
+Useraccount.prototype.getByValue = (value, field) => {
+    const query = that.sqlTable
+        .select(that.sqlTable.star())
+        .from(that.sqlTable)
+        .where(that.sqlTable[field].equals(value)).toQuery();
     return that.dbConn.queryAsync(query.text, query.values);
 };
 
