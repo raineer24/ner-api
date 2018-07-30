@@ -78,7 +78,7 @@ paths:
               message:
                 type: string
                 example: Unauthorized
-  /user/account/{id}/view:
+  /useraccount/account/{id}/view:
     x-swagger-router-controller: useraccount
     get:
       tags:
