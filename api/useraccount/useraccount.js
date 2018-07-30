@@ -1,6 +1,7 @@
 const BluePromise = require('bluebird');
 const sql = require('sql');
 const config = require('../../config/config');
+const _ = require('lodash');
 
 const Conn = require('../../service/connection');
 const log = require('color-logs')(true, true, 'User Account');
@@ -44,7 +45,70 @@ Useraccount.prototype.testConnection = () => new BluePromise((resolve, reject) =
     reject('Not Found');
 });
 
+/**
+  * Save User account
+  * @param {string} username
+  * @param {string} password
+  * @param {string} email
+  * @param {string} uiid
+  * @return {object}
+*/
+Useraccount.prototype.create = () => new BluePromise((resolve, reject) => {
+    that.getByValue(that.model.username, 'username')
+      .then((results) => {
+          if(results.length === 0) {
+              log.info(results);
+          }
+          const query = that.sqltable.insert(that.model).toQuery();
+          that.dbConn.queryAsync(query.text, query.values);
+          log.info(query.values);
+      })
+        .catch((err) => {
+            reject(err);
+        });
+})
 
+
+
+/**
+  * Format response object and/or append additional object properties
+  * @param {object} object
+  * @param {object} properties
+  * @return {object}
+*/
+Useraccount.prototype.cleanResponse = (object, properties) => {
+    // eslint-disable-next-line
+    delete object.password;
+    _.merge(object, properties);
+
+    return object;
+};
+
+
+/**
+  * Get by value
+  * @param {any} value
+  * @param {string} field
+  * @return {object<Promise>}
+*/
+Useraccount.prototype.getByValue = (value, field) => {
+   
+    const query = that.sqltable
+        .select(that.sqltable.star())
+        .from(that.sqltable)
+        .where(that.sqltable[field].equals(value)).toQuery();
+    log.info(query.values);
+    return that.dbConn.queryAsync(query.text, query.values);
+};
+
+/**
+  * Get userAccount by id
+  * @param {integer} id
+  * @return {object<Promise>}
+*/
+// User.prototype.getById = id => that.dbConn.readAsync(id);
+Useraccount.prototype.findById = id => that.getByValue(id, 'id');
+Useraccount.prototype.getById = id => that.getByValue(id, 'id');
 
 Useraccount.prototype.findAll = (skip, limit, filters) => {
     let query = null;

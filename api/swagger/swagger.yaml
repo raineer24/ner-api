@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   version: "1.0.0"
-  title: Grocer X App
+  title: Ner Api
 # during dev, should point to your local machine
 host: localhost:10010
 # basePath prefixes all resource paths
@@ -51,12 +51,12 @@ paths:
     x-swagger-router-controller: useraccount
     get:
       tags:
-        - user
+        - profile
       summary: Get all usersaccount
       operationId: getAllUsers
-      # parameters:
-      #   - $ref: "#/parameters/skip"
-      #   - $ref: "#/parameters/limit"
+      parameters:
+        - $ref: "#/parameters/skip"
+        - $ref: "#/parameters/limit"
       responses:
         200:
           description: Get all users
@@ -73,7 +73,40 @@ paths:
             properties:
               message:
                 type: string
-                example: Unauthorized
+                example: Unauthorized      
+  /useraccount/account/{id}/view:
+    x-swagger-router-controller: useraccount
+    get:
+      tags:
+        - profile
+      summary: Return user profile
+      operationId: viewAccount
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        200:
+          description: Profile Object
+          schema:
+            properties:
+              id:
+                type: number
+                example: 5000012
+              firstName:
+                type: string
+                example: John
+              lastName:
+                type: string
+                example: Stone
+              dateBirthday:
+                type: number
+                example: 587260800000
+                description: timestamp
+              address1:
+                type: string
+                example: Upper Thompson Road
+              address2:
+                type: string
+                example: East Cost Drive
   /useraccount/account/save:
     x-swagger-router-controller: useraccount
     post:
@@ -104,4 +137,30 @@ paths:
             properties:
               message:
                 type: string
-                example: Unauthorized              
+                example: Unauthorized                                          
+definitions:
+  UserRegister:
+    title: UserRegister
+    type: object
+    required:
+      - email
+    properties:
+      email:
+        type: string
+        description: user e-mail
+parameters:
+  id:
+    in: path
+    name: id
+    type: string
+    required: true
+  limit:
+    in: query
+    name: limit
+    type: number
+    required: false
+  skip:
+    in: query
+    name: skip
+    type: number
+    required: false          

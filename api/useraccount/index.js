@@ -38,4 +38,51 @@ useraccount.getAllUsers = (req, res) => {
         });
 };
 
+/**
+* User registration
+* @param {Object} req
+* @param {Object} res
+* @return {Object}
+*/
+useraccount.registerAccount = (req, res) => {
+    //new Log({ message: 'Create new user account', action: 'USER_REGISTER', type: 'INFO' }).create();
+    const instUseraccount = new Useraccount(req.swagger.params.body.value);
+    instUseraccount.create()
+        .then(userData => res.json(instUseraccount.cleanResponse(userData, { message: 'Saved' })))
+        .catch(err => res.status(err === 'Found' ? 201 : 500).json({
+            message: err === 'Found' ? 'Existing' : err,
+        }))
+        .finally(() => {
+            instUseraccount.release();
+        });
+};
+
+/**
+* View user profile
+* @param {Object} req
+* @param {Object} res
+* @return {Object}
+*/
+useraccount.viewAccount = (req, res) => {
+    const instUseraccount = new Useraccount();
+    instUseraccount.getById(query.validateParam(req.swagger.params, 'id', 0))
+     .then((resultList) => {
+        if (!resultList[0].id) {
+            return res.status(404).json({
+                message: 'Not Found'
+            });
+        }
+        return res.json(instUseraccount.cleanResponse(resultList[0], {
+            message: 'Found'
+        }));
+     })
+     .catch(() => res.status(404).json({
+        message: 'Not Found',
+     }))
+     .finally(() => {
+         instUseraccount.release();
+     });
+};
+
+
 module.exports = useraccount;
