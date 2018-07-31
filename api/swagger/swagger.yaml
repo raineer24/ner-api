@@ -163,4 +163,14 @@ parameters:
     in: query
     name: skip
     type: number
-    required: false          
+    required: false
+  username:
+    in: path
+    name: username
+    type: string
+    required: true
+  email:
+    in: path
+    name: email
+    type: string
+    required: true              

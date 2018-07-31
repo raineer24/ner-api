@@ -58,7 +58,7 @@ SwaggerParser.validate(config.swaggerFile)
             app.use(morgan('combined'));
 
             apiSubPath.use((req, res, next) => {
-                res.setHeader('X-Powered-By', 'EOS');
+                res.setHeader('X-Powered-By', 'NeR');
                 next();
             });
             app.use(SwaggerUi(swaggerExpress.runner.swagger));
@@ -75,6 +75,11 @@ SwaggerParser.validate(config.swaggerFile)
             });
         });  
     }); //end of swagger parser.bundle
+
+process.on('uncaughtException', (err) => {
+    log.error(err);
+});
+
 
 
 

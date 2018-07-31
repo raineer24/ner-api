@@ -10,6 +10,12 @@ let that;
 
 function Useraccount(useraccount) {
     sql.setDialect('mysql');
+
+    this.model = _.extend(useraccount, {
+        dateCreated: new Date().getTime(),
+        dateUpdated: new Date().getTime(),
+    });
+    log.info(this.model);
     this.table = 'useraccount';
     this.dbConn = Conn;
     this.sqltable = sql.define({
@@ -54,19 +60,31 @@ Useraccount.prototype.testConnection = () => new BluePromise((resolve, reject) =
   * @return {object}
 */
 Useraccount.prototype.create = () => new BluePromise((resolve, reject) => {
-    that.getByValue(that.model.username, 'username')
-      .then((results) => {
-          if(results.length === 0) {
-              log.info(results);
-          }
-          const query = that.sqltable.insert(that.model).toQuery();
-          that.dbConn.queryAsync(query.text, query.values);
-          log.info(query.values);
-      })
-        .catch((err) => {
-            reject(err);
-        });
-})
+   that.getByValue(that.model.username, 'username')
+    .then((results) => {
+        if (results.length === 0) {
+            const query = that.sqltable.insert(that.model).toQuery();
+            that.dbConn.queryAsync(query.text, query.values)
+             .then((response) => {
+               that.getById(response.insertId)
+                .then((resultList) => {
+                    resolve(resultList[0]);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+             })
+            .catch((err) => {
+                reject(err);
+            });
+        } else {
+            reject('Found');
+        }
+    })
+    .catch((err) => {
+        reject(err);
+    });
+});
 
 
 
@@ -97,8 +115,8 @@ Useraccount.prototype.getByValue = (value, field) => {
         .select(that.sqltable.star())
         .from(that.sqltable)
         .where(that.sqltable[field].equals(value)).toQuery();
-    log.info(query.values);
-    return that.dbConn.queryAsync(query.text, query.values);
+        return that.dbConn.queryAsync(query.text, query.values);
+   
 };
 
 /**
