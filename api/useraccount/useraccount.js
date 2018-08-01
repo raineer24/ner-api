@@ -66,9 +66,7 @@ Useraccount.prototype.authenticate = () => new BluePromise((resolve, reject) => 
     } else if (that.model.uiid) {
         filter.uiid = that.model.uiid;
     }
-
-    log.info('filter');
-    log.info(filter);
+    
     that.findAll(0, 1, filter)
      .then((results) => {
         if (results.length === 0) {
@@ -76,8 +74,6 @@ Useraccount.prototype.authenticate = () => new BluePromise((resolve, reject) => 
             return;
          
         }
-        log.info('results');
-        log.info(results);
         resolve(results[0]);
      })
     .catch((err) => {
