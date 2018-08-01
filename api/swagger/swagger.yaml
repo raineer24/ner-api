@@ -164,11 +164,6 @@ parameters:
     name: skip
     type: number
     required: false
-  username:
-    in: path
-    name: username
-    type: string
-    required: true
   email:
     in: path
     name: email
