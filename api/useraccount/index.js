@@ -15,6 +15,26 @@ useraccount.connectDb = (req, res) => {
 };
 
 /**
+* User authentication and authorization
+* @param {Object} req
+* @param {Object} res
+* @return {Object}
+*/
+useraccount.loginAccount = (req,res) => {
+    const instUseraccount = new Useraccount(req.swagger.params.body.value);
+    instUseraccount.authenticate()
+      .then((result) => {
+        return res.json(instUseraccount.cleanResponse(result, {message: 'Found'}));
+      })
+      .catch(() => res.status(404).json({
+          message: 'Not Found',
+      }))
+      .finally(() => {
+          instUseraccount.release();
+      });
+};
+
+/**
 * List
 * @param {Object} req
 * @param {Object} res
