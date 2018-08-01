@@ -15,7 +15,6 @@ function Useraccount(useraccount) {
         dateCreated: new Date().getTime(),
         dateUpdated: new Date().getTime(),
     });
-    log.info(this.model);
     this.table = 'useraccount';
     this.dbConn = Conn;
     this.sqltable = sql.define({
@@ -49,6 +48,42 @@ Useraccount.prototype.testConnection = () => new BluePromise((resolve, reject) =
         return;
     }
     reject('Not Found');
+});
+
+/**
+  * User authentication of username and password
+  * @param {string} username
+  * @param {string} password
+  * @return {object}
+*/
+Useraccount.prototype.authenticate = () => new BluePromise((resolve, reject) => {
+    const filter = {
+        username: that.model.username,
+    };
+    
+    if (that.model.password) {
+        filter.password = that.model.password;
+    } else if (that.model.uiid) {
+        filter.uiid = that.model.uiid;
+    }
+
+    log.info('filter');
+    log.info(filter);
+    that.findAll(0, 1, filter)
+     .then((results) => {
+        if (results.length === 0) {
+            reject('Not Found');
+            return;
+         
+        }
+        log.info('results');
+        log.info(results);
+        resolve(results[0]);
+     })
+    .catch((err) => {
+        reject(err);
+    });
+    
 });
 
 /**
@@ -131,20 +166,20 @@ Useraccount.prototype.getById = id => that.getByValue(id, 'id');
 Useraccount.prototype.findAll = (skip, limit, filters) => {
     let query = null;
     if (filters.username && filters.password) {
-        query = that.sqlTable
-            .select(that.sqlTable.star())
-            .from(that.sqlTable)
-            .where(that.sqlTable.username.equals(filters.username)
-                .and(that.sqlTable.password.equals(filters.password)))
-            .limit(limit)
-            .offset(skip)
-            .toQuery();
+        query = that.sqltable
+          .select(that.sqltable.star())
+          .from(that.sqltable)
+          .where(that.sqltable.username.equals(filters.username)
+            .and(that.sqltable.password.equals(filters.password)))
+          .limit(limit)
+          .offset(skip)
+          .toQuery();
     } else if (filters.username && filters.uiid) {
-        query = that.sqlTable
-            .select(that.sqlTable.star())
-            .from(that.sqlTable)
-            .where(that.sqlTable.username.equals(filters.username)
-                .and(that.sqlTable.uiid.equals(filters.uiid)))
+        query = that.sqltable
+            .select(that.sqltable.star())
+            .from(that.sqltable)
+            .where(that.sqltable.username.equals(filters.username)
+                .and(that.sqltable.uiid.equals(filters.uiid)))
             .limit(limit)
             .offset(skip)
             .toQuery();
