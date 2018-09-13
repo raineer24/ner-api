@@ -168,7 +168,30 @@ paths:
             properties:
               message:
                 type: string
-                example: Unauthorized                                          
+                example: Unauthorized
+  /useraccount/roles:
+    x-swagger-router-controller: useraccount
+    get:
+      tags:
+        - user
+      summary: Return useraccount roles
+      operationId: getRoles
+      responses:
+        200:
+          description: Profile Object
+          schema:
+            properties:
+              id:
+                type: number
+                example: 5000012
+        403:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized                                                        
 definitions:
   UserRegister:
     title: UserRegister

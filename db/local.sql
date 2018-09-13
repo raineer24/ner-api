@@ -47,6 +47,33 @@ CREATE TABLE `useraccount` (
 
 LOCK TABLES `useraccount` WRITE;
 /*!40000 ALTER TABLE `useraccount` DISABLE KEYS */;
-INSERT INTO `useraccount` VALUES (1,'ian.jo@gmail.com','password','ian.jo23@gmail.com','Ian','Jo','12345','M','+63 9087654321',468432000000,'0','0',1512763400407,1512763400407),(2,'eugene.sanchez@gmail.com','password','eugene.sanchez@gmail.com','Eugene','Sanchez','6548','M','+63 9087658965',468432000000,'0','0',1512763400407,1512763400407);
+INSERT INTO `useraccount` VALUES (1,'ian.jo@gmail.com','password','ian.jo23@gmail.com','Ian','Jo','12345','M','+63 9087654321',468432000000,'0','0',1512763400407,1512763400407),(2,'eugene.sanchez@gmail.com','password','eugene.sanchez@gmail.com','Eugene','Sanchez','6548','M','+63 9087658965',468432000000,'0','0',1512763400407,1512763400407),(3,'test','123','eugene.sanchez@gmail.com','Anghelita','Maria','5468','F','+63 9087658645',468432000000,'0','0',1512763400407,1512763400407);
 /*!40000 ALTER TABLE `useraccount` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `role`
+--
+
+DROP TABLE IF EXISTS `role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `role` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `name` char(100) NOT NULL,
+  `dateCreated` bigint(50) NOT NULL,
+  `dateUpdated` bigint(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf16;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT INTO `role` VALUES
+(1,'EOS Developer',1521072000000,1521072000000),(2,'EOS Admin',1521072000000,1521072000000),(3,'Partner Seller - Admin',1521072000000,1521072000000),(4,'Partner Seller - Coordinator',1521072000000,1521072000000),(5,'Partner Seller - Finance',1521072000000,1521072000000),(6,'Partner Seller - Management',1521072000000,1521072000000),(7,'Partner Buyer - Admin',1521072000000,1521072000000),(8,'Partner Buyer - Finance',1521072000000,1521072000000),(9,'Partner Seller - Assembly',1521072000000,1521072000000),(10,'Partner Seller - Delivery',1521072000000,1521072000000),(11,'EOS Customer Support 1',1521072000000,1521072000000),(12,'EOS Customer Support 2',1521072000000,1521072000000),(13,'EOS Finance',1521072000000,1521072000000);
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;

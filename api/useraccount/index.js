@@ -104,5 +104,24 @@ useraccount.viewAccount = (req, res) => {
      });
 };
 
+/**
+* Get user roles
+* @param {Object} req
+* @param {Object} res
+* @return {Object}
+*/
+useraccount.getRoles = (req, res) => {
+    const instUseraccount = new Useraccount();
+    instUseraccount.getRoles()
+        .then(result => res.json(result))
+        .catch((err) => {
+            //new Log({ message: `${err}`, action: 'SELLER_ACCOUNT_ROLES', type: 'ERROR' }).create();
+            return res.status(500).json({ message: 'Failed' });
+        })
+        .finally(() => {
+            instUseraccount.release();
+        });
+};
+
 
 module.exports = useraccount;
