@@ -32,6 +32,8 @@ function Useraccount(useraccount) {
             'birthdate',
             'deactivated',
             'forcedReset',
+            'role_id',
+            'lastLogin',
             'dateCreated',
             'dateUpdated',
         ]
