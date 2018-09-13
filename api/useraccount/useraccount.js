@@ -18,7 +18,7 @@ function Useraccount(useraccount) {
     this.table = 'useraccount';
     this.dbConn = Conn;
     this.sqltable = sql.define({
-        name: this.table,
+        name: 'useraccount',
         columns: [
             'id',
             'username',
@@ -32,11 +32,22 @@ function Useraccount(useraccount) {
             'birthdate',
             'deactivated',
             'forcedReset',
+            'role_id',
+            'lastLogin',
             'dateCreated',
             'dateUpdated',
         ]
 
 
+    });
+    this.sqlTableRole = sql.define({
+        name: 'role',
+        columns: [
+            'id',
+            'name',
+            'dateCreated',
+            'dateUpdated',
+        ],
     });
 
     that = this;
@@ -116,6 +127,18 @@ Useraccount.prototype.create = () => new BluePromise((resolve, reject) => {
         reject(err);
     });
 });
+
+/**
+  * Get by value
+  * @param {any} value
+  * @param {string} field
+  * @return {object<Promise>}
+*/
+Useraccount.prototype.getRoles = () => {
+    const strSql = 'SELECT * FROM role ORDER BY name;';
+
+    return that.dbConn.queryAsync(strSql);
+};
 
 
 
