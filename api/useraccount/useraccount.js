@@ -2,6 +2,7 @@ const BluePromise = require('bluebird');
 const sql = require('sql');
 const config = require('../../config/config');
 const _ = require('lodash');
+const Util = require('../helpers/util');
 
 const Conn = require('../../service/connection');
 const log = require('color-logs')(true, true, 'User Account');
@@ -85,7 +86,12 @@ Useraccount.prototype.authenticate = () => new BluePromise((resolve, reject) => 
             return;
          
         }
-        resolve(results[0]);
+         tokenContainer = Util.signUserToken(results[0]);
+        resolve(_.merge({
+            authenticated: true,
+            token: tokenContainer,
+            dateTime: new Date().getTime(),
+        }, results[0]));
      })
     .catch((err) => {
         reject(err);
@@ -126,6 +132,28 @@ Useraccount.prototype.create = () => new BluePromise((resolve, reject) => {
     .catch((err) => {
         reject(err);
     });
+});
+
+/**
+  * Check user entitlement
+  * @param {object} userAuth
+  * @return {object}
+*/
+Useraccount.prototype.authorize = userAuth => new BluePromise((resolve, reject) => {
+    if (!userAuth) {
+        reject(null);
+        return;
+    }
+    resolve(_.merge({
+        // authorize: true,
+        authorize: Util.decodeToken(tokenContainer),
+        // roles: [
+        //   'customer',
+        //   'limited',
+        // ],
+        dateAuthenticated: userAuth.dateTime,
+        dateAuthorized: new Date().getTime(),
+    }, userAuth));
 });
 
 /**

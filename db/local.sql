@@ -49,7 +49,7 @@ CREATE TABLE `useraccount` (
 
 LOCK TABLES `useraccount` WRITE;
 /*!40000 ALTER TABLE `useraccount` DISABLE KEYS */;
-INSERT INTO `useraccount` VALUES (1,'ian.jo@gmail.com','password','ian.jo23@gmail.com','Ian','Jo','12345','M','+63 9087654321',468432000000,'0','0',1,0,1512763400407,1512763400407),(2,'eugene.sanchez@gmail.com','password','eugene.sanchez@gmail.com','Eugene','Sanchez','6548','M','+63 9087658965',468432000000,'0','0',1,0,1512763400407,1512763400407),(3,'test','123','eugene.sanchez@gmail.com','Anghelita','Maria','5468','F','+63 9087658645',468432000000,'0','0',5,0,1512763400407,1512763400407);
+INSERT INTO `useraccount` VALUES (1,'ian.jo@gmail.com','password','ian.jo23@gmail.com','Ian','Jo','12345','M','+63 9087654321',468432000000,'0','0',1,0,1512763400407,1512763400407),(2,'eugene.sanchez@gmail.com','password','eugene.sanchez@gmail.com','Eugene','Sanchez','6548','M','+63 9087658965',468432000000,'0','0',1,0,1512763400407,1512763400407),(3,'test','123','eugene.sanchez@gmail.com','Anghelita','Maria','5468','F','+63 9087658645',468432000000,'0','0',1,0,1512763400407,1512763400407);
 /*!40000 ALTER TABLE `useraccount` ENABLE KEYS */;
 UNLOCK TABLES;
 

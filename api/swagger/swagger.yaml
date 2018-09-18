@@ -169,6 +169,38 @@ paths:
               message:
                 type: string
                 example: Unauthorized
+  /useraccount/account/{id}/update:
+    x-swagger-router-controller: useraccount
+    post:
+      tags:
+        - user
+      summary: Update useraccount
+      operationId: updateAccount
+      parameters:
+        - $ref: "#/parameters/id"
+        - name: body
+          in: body
+          description: post contents
+          required: true
+          schema:
+            $ref: "#/definitions/UserRegister"
+      responses:
+        200:
+          description: Successful update
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: norbert@hutcake.com
+        403:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized              
   /useraccount/roles:
     x-swagger-router-controller: useraccount
     get:
