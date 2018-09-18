@@ -106,6 +106,26 @@ useraccount.viewAccount = (req, res) => {
      });
 };
 
+useraccount.updateAccount = (req, res) => {
+    const instUseraccount = new Useraccount(req.swagger.params.body.value);
+    instUseraccount.update(query.validateParam(req.swagger.params, 'id', 0))
+      .then(status => res.json({ status, message: 'Updated' }))
+      .catch((err) => {
+          switch (err) {
+            case 'Not Found':
+                return res.status(404).json({ message: 'Not Found' });
+            case 'Email Found':
+                  return res.status(409).json({ message: 'Email already taken' });
+            default:
+                  return res.status(409).json({ message: 'Failed' });           
+
+          }
+      })
+      .finally(() => {
+          instUseraccount.release();
+      });
+};
+
 /**
 * Get user roles
 * @param {Object} req

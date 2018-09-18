@@ -171,7 +171,7 @@ paths:
                 example: Unauthorized
   /useraccount/account/{id}/update:
     x-swagger-router-controller: useraccount
-    post:
+    put:
       tags:
         - user
       summary: Update useraccount
