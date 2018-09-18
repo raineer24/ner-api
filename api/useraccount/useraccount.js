@@ -168,6 +168,41 @@ Useraccount.prototype.getRoles = () => {
     return that.dbConn.queryAsync(strSql);
 };
 
+Useraccount.prototype.update = id => new BluePromise((resolve, reject) => {
+    delete that.model.username;
+    that.model.dateUpdated = new Date().getTime();
+    that.getById(id)
+      .then((resultList) => {
+        if (!resultList[0].id) {
+            reject('Not Found');
+        } else {
+          that.getByValue(that.model.email, 'email')
+            .then((resultEmail) => {
+              if (resultEmail.length && resultEmail[0].id !== resultList[0].id) {
+                  reject('Email Found');
+              } else {
+                that.model = _.merge(resultList[0], that.model);
+                const query = that.sqltable.update(that.model)
+                   .where(that.sqltable.id.equals(id)).toQuery();
+                that.dbConn.queryAsync(query.text, query.values)
+                  .then((response) => {
+                      resolve(response.message);
+                  })
+                  .catch((err) => {
+                      reject(err);
+                  });    
+              }
+            })
+            .catch(() => {
+                reject(err);
+            });
+        }
+      })
+      .catch(() => {
+          reject('Not Found');
+      });
+});
+
 
 
 /**
