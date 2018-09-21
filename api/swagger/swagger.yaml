@@ -78,7 +78,7 @@ paths:
     x-swagger-router-controller: useraccount
     get:
       tags:
-        - profile
+        - user
       summary: Return user profile
       operationId: viewAccount
       parameters:
