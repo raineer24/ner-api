@@ -37,6 +37,29 @@ useraccount.loginAccount = (req,res) => {
 };
 
 /**
+* View user profile
+* @param {Object} req
+* @param {Object} res
+* @return {Object}
+*/
+useraccount.viewAccount = (req, res) => {
+    const instUseraccount = new Useraccount();
+    instUseraccount.getById(query.validateParam(req.swagger.params, 'id', 0))
+      .then((resultList) => {
+        if (!resultList[0].id) {
+            return res.status(404).json({ message: 'Not Found' });
+        }
+        return res.json(instUseraccount.cleanResponse(resultList[0], { message: 'Found' }));
+      })
+      .catch(() => res.statsu(404).json({
+          message: 'Not Found',
+      }))
+      .finally(() => {
+          instUseraccount.release();
+      })
+};
+
+/**
 * List
 * @param {Object} req
 * @param {Object} res
